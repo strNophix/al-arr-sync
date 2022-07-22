@@ -60,7 +60,7 @@ class RadarrClient:
             if resp.status_code != 201:
                 resp_data = resp.json()
                 error_codes = map(lambda x: x["errorCode"], resp_data)
-                if "SeriesExistsValidator" in error_codes:
+                if "MovieExistsValidator" in error_codes:
                     raise Exception(f"Movie already exists: {show['title']}")
 
                 raise Exception(f"Failed to add movie: {show['title']}:\n{resp_data}")
