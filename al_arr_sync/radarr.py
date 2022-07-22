@@ -1,4 +1,5 @@
 import os
+import configparser
 import typing
 from urllib.parse import urljoin
 
@@ -9,16 +10,32 @@ from al_arr_sync.types import AnyDict
 
 
 class RadarrClient:
-    def __init__(self, radarr_url: str, api_key: str) -> None:
-        self.radarr_url = radarr_url
+    def __init__(
+        self, api_url: str, api_key: str, folder_path: str, quality_profile: int = 4
+    ) -> None:
+        self.api_url = api_url
         self.api_key = api_key
+        self.folder_path = folder_path
+        self.quality_profile = quality_profile
+
         self.http_session = Session()
 
     @staticmethod
     def from_env() -> "RadarrClient":
         return RadarrClient(
-            radarr_url=os.environ["RADARR_API_URL"],
-            api_key=os.environ["RADARR_API_KEY"],
+            api_url=os.environ["SONARR_API_URL"],
+            api_key=os.environ["SONARR_API_KEY"],
+            folder_path=os.environ["SONARR_FOLDER_PATH"],
+            quality_profile=int(os.environ["SONARR_QUALITY_PROFILE"]),
+        )
+
+    @staticmethod
+    def from_config(cfg: configparser.ConfigParser) -> "RadarrClient":
+        return RadarrClient(
+            api_url=cfg["radarr"]["api_url"],
+            api_key=cfg["radarr"]["api_key"],
+            folder_path=cfg["radarr"]["folder_path"],
+            quality_profile=int(cfg["radarr"]["quality_profile"]),
         )
 
     def _prepare_request(
@@ -28,7 +45,7 @@ class RadarrClient:
         params: AnyDict = {},
         json: typing.Optional[AnyDict] = None,
     ) -> PreparedRequest:
-        url = urljoin(self.radarr_url, endpoint)
+        url = urljoin(self.api_url, endpoint)
         headers = {"X-Api-Key": self.api_key}
 
         req = PreparedRequest()
@@ -50,8 +67,8 @@ class RadarrClient:
                         "ignoreEpisodesWithFiles": False,
                         "ignoreEpisodesWithoutFiles": False,
                     },
-                    "rootFolderPath": os.environ["RADARR_FOLDER_PATH"],
-                    "qualityProfileId": int(os.environ["RADARR_QUALITY_PROFILE"]),
+                    "rootFolderPath": self.folder_path,
+                    "qualityProfileId": self.quality_profile,
                 }
             )
             req = self._prepare_request("/api/v3/movie", method="POST", json=payload)

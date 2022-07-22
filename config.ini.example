@@ -1,0 +1,15 @@
+[anilist]
+username=
+
+[sonarr]
+api_url=
+api_key=
+folder_path=
+quality_profile=4
+language_profile=1
+
+[radarr]
+api_url=
+api_key=
+folder_path=
+quality_profile=4

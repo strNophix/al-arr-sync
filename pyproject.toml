@@ -6,7 +6,6 @@ authors = ["strNophix <nvdpoel01@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-python-dotenv = "^0.20.0"
 requests = "^2.28.1"
 
 [tool.poetry.dev-dependencies]

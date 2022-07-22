@@ -1,21 +1,20 @@
 import os
 
-from dotenv import load_dotenv
-
 from al_arr_sync.anilist import AniListClient
 from al_arr_sync.radarr import RadarrClient
 from al_arr_sync.sonarr import SonarrClient
 from al_arr_sync.types import DlAutomator
-
-load_dotenv()
+from al_arr_sync.config import load_config
 
 
 def main() -> int:
-    al = AniListClient()
-    sonarr: DlAutomator = SonarrClient.from_env()
-    radarr: DlAutomator = RadarrClient.from_env()
+    cfg = load_config("config.ini")
 
-    username = os.environ["ANILIST_USERNAME"]
+    al = AniListClient()
+    sonarr: DlAutomator = SonarrClient.from_config(cfg)
+    radarr: DlAutomator = RadarrClient.from_config(cfg)
+
+    username = cfg["anilist"]["username"]
     media = al.currently_watching(username)
 
     for entry in media:
