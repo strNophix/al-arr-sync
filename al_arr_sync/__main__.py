@@ -1,4 +1,5 @@
-import os
+import sys
+import typing
 
 from al_arr_sync.anilist import AniListClient
 from al_arr_sync.radarr import RadarrClient
@@ -7,8 +8,9 @@ from al_arr_sync.types import DlAutomator
 from al_arr_sync.config import load_config
 
 
-def main() -> int:
-    cfg = load_config("config.ini")
+def main(args: typing.Sequence[str]) -> int:
+    cfg_path = args[0] if len(args) > 0 else "./config.ini"
+    cfg = load_config(cfg_path)
 
     al = AniListClient()
     sonarr: DlAutomator = SonarrClient.from_config(cfg)
@@ -44,4 +46,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(main(sys.argv[1:]))

@@ -2,10 +2,16 @@
 A small script for syncing your currently watching anime from AniList to Sonarr/Radarr.
 
 ## Usage
-Assuming you have [poetry](https://python-poetry.org/docs/#installation) installed:
 ```sh
-cp .env.example .env
-# Update the config with your editor of choice.
-poetry install
-poetry run python3 -m al_arr_sync
+pip install git+https://git.cesium.pw/niku/al-arr-sync.git#egg=al-arr-sync
+
+wget -O config.ini https://git.cesium.pw/niku/al-arr-sync/raw/branch/main/config.ini.example 
+nano config.ini
+
+python -m al_arr_sync
+```
+
+In case you want to use a specific config:
+```sh
+python -m al_arr_sync ~/home/.config/al-arr-sync/config.ini
 ```
