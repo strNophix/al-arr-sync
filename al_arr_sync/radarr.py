@@ -1,8 +1,10 @@
-import typing
-from requests import Session
-from requests import PreparedRequest
 import os
+import typing
 from urllib.parse import urljoin
+
+from requests import PreparedRequest
+from requests import Session
+
 from al_arr_sync.types import AnyDict
 
 

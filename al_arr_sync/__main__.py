@@ -1,8 +1,10 @@
 import os
+
 from dotenv import load_dotenv
+
 from al_arr_sync.anilist import AniListClient
-from al_arr_sync.sonarr import SonarrClient
 from al_arr_sync.radarr import RadarrClient
+from al_arr_sync.sonarr import SonarrClient
 from al_arr_sync.types import DlAutomator
 
 load_dotenv()

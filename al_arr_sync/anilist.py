@@ -1,5 +1,7 @@
 import typing
+
 from requests import Session
+
 from al_arr_sync.types import AnyDict
 
 
