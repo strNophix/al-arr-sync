@@ -3,6 +3,7 @@ import typing
 from dotenv import load_dotenv
 from al_arr_sync.anilist import AniListClient
 from al_arr_sync.sonarr import SonarrClient
+from al_arr_sync.types import AnyDict
 
 load_dotenv()
 
@@ -13,8 +14,8 @@ def main() -> int:
 
     username = os.environ["ANILIST_USERNAME"]
     media = al.currently_watching(username)
-    
-    series: typing.List[typing.Any] = []
+
+    series: typing.List[AnyDict] = []
     for entry in media:
         media_format = entry["media"]["format"]
         if media_format == "TV":

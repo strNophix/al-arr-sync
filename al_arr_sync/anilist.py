@@ -1,8 +1,6 @@
 import typing
 from requests import Session
-
-if typing.TYPE_CHECKING:
-    AnyDict = typing.Dict[typing.Any, typing.Any]
+from al_arr_sync.types import AnyDict
 
 
 USER_WATCHING_QUERY = """
@@ -28,12 +26,12 @@ class AniListClient:
         self.graphql_api_url = "https://graphql.anilist.co/"
         self.http_session = Session()
 
-    def currently_watching(self, username: str) -> typing.List['AnyDict']:
+    def currently_watching(self, username: str) -> typing.List[AnyDict]:
         resp = self.http_session.post(
             self.graphql_api_url,
             json={"query": USER_WATCHING_QUERY, "variables": {"userName": username}},
         )
-        resp_data: 'AnyDict' = resp.json()
+        resp_data: AnyDict = resp.json()
         if errors := resp_data.get("errors"):
             raise Exception(errors)
 

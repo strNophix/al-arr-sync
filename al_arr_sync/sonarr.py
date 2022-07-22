@@ -3,9 +3,8 @@ from requests import Session
 from requests import PreparedRequest
 import os
 from urllib.parse import urljoin
+from al_arr_sync.types import AnyDict
 
-if typing.TYPE_CHECKING:
-    AnyDict = typing.Dict[typing.Any, typing.Any]
 
 class SonarrClient:
     def __init__(self, sonarr_url: str, api_key: str) -> None:
@@ -24,8 +23,8 @@ class SonarrClient:
         self,
         endpoint: str,
         method: str = "GET",
-        params: 'AnyDict' = {},
-        json: typing.Optional['AnyDict'] = None,
+        params: AnyDict = {},
+        json: typing.Optional[AnyDict] = None,
     ) -> PreparedRequest:
         url = urljoin(self.sonarr_url, endpoint)
         headers = {"X-Api-Key": self.api_key}
@@ -34,14 +33,14 @@ class SonarrClient:
         req.prepare(method=method, url=url, headers=headers, params=params, json=json)
         return req
 
-    def lookup_series(self, title: str) -> typing.List['AnyDict']:
+    def lookup_series(self, title: str) -> typing.List[AnyDict]:
         req = self._prepare_request("/api/v3/series/lookup", params={"term": title})
         resp = self.http_session.send(req)
         return resp.json()
 
-    def add_series(self, *series: 'AnyDict'):
+    def add_series(self, *series: AnyDict):
         for show in series:
-            payload: 'AnyDict' = show.copy()
+            payload: AnyDict = show.copy()
             payload.update(
                 {
                     "addOptions": {
