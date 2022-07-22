@@ -1,35 +1,43 @@
 import os
-import typing
 from dotenv import load_dotenv
 from al_arr_sync.anilist import AniListClient
 from al_arr_sync.sonarr import SonarrClient
-from al_arr_sync.types import AnyDict
+from al_arr_sync.radarr import RadarrClient
+from al_arr_sync.types import DlAutomator
 
 load_dotenv()
 
 
 def main() -> int:
     al = AniListClient()
-    sonarr = SonarrClient.from_env()
+    sonarr: DlAutomator = SonarrClient.from_env()
+    radarr: DlAutomator = RadarrClient.from_env()
 
     username = os.environ["ANILIST_USERNAME"]
     media = al.currently_watching(username)
 
-    series: typing.List[AnyDict] = []
     for entry in media:
         media_format = entry["media"]["format"]
-        if media_format == "TV":
-            series.append(entry)
+        show_name = entry["media"]["title"]["english"]
 
-    for show in series:
-        show_name = show["media"]["title"]["english"]
-        results = sonarr.lookup_series(show_name)
+        client: DlAutomator
+        if media_format == "TV":
+            client = sonarr
+        elif media_format == "MOVIE":
+            client = radarr
+        else:
+            continue
+
+        results = client.lookup_series(show_name)
+        if len(results) == 0:
+            print(f"No results found for: {show_name}")
+            continue
+
         try:
-            sonarr.add_series(results[0])
-            print(f"Successfully added series {show_name}")
+            client.add_series(results[0])
+            print(f"Successfully added: {show_name}")
         except Exception as e:
             print(e)
-            continue
 
     return 0
 
