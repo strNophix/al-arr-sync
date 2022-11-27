@@ -13,5 +13,5 @@ python -m al_arr_sync
 
 In case you want to use a specific config:
 ```sh
-python -m al_arr_sync ~/home/.config/al-arr-sync/config.ini
+python -m al_arr_sync ~/.config/al-arr-sync/config.ini
 ```
